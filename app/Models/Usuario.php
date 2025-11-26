@@ -2,18 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Foundation\Auth\User as Authenticatable; // <- IMPORTANTE
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class Usuario extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use Notifiable;
 
-    // Cambiar la tabla
+    // Nombre real de la tabla en tu BD
     protected $table = 'usuario';
 
-    // Campos permitidos
+    // Clave primaria
+    protected $primaryKey = 'id';
+    public $timestamps = false;
+    public $rememberTokenName = '';
+
+    // Campos que se pueden asignar en masa
     protected $fillable = [
         'nombre',
         'telefono',
@@ -23,7 +27,7 @@ class User extends Authenticatable
         'estado',
     ];
 
-    // Campos ocultos
+    // Ocultar en JSON
     protected $hidden = [
         'password',
         'remember_token',
@@ -34,6 +38,8 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'estado'   => 'boolean',
         ];
     }
+    
 }
