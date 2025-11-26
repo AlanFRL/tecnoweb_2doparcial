@@ -26,7 +26,7 @@ class Orden extends Model
         'descuento',
         'total',
         'cliente_id',
-        'empleado_id',
+        'usuario_id',
         'observaciones',
     ];
 
@@ -46,10 +46,10 @@ class Orden extends Model
         return $this->belongsTo(Cliente::class, 'cliente_id');
     }
 
-    // Relación con Empleado
-    public function empleado(): BelongsTo
+    // Relación con Usuario (quien creó la orden)
+    public function usuario(): BelongsTo
     {
-        return $this->belongsTo(Empleado::class, 'empleado_id');
+        return $this->belongsTo(Usuario::class, 'usuario_id');
     }
 
     // Relación con OrdenDetalle
@@ -68,5 +68,38 @@ class Orden extends Model
     public function pagos(): HasMany
     {
         return $this->hasMany(Pago::class, 'orden_nro', 'nro');
+    }
+
+    /**
+     * Generar el siguiente número de orden
+     */
+    public static function generarNumeroOrden(): string
+    {
+        $ultimaOrden = self::orderBy('nro', 'desc')->first();
+        
+        if (!$ultimaOrden) {
+            return 'BEL-000001';
+        }
+
+        $ultimoNumero = (int) substr($ultimaOrden->nro, 4);
+        $nuevoNumero = $ultimoNumero + 1;
+        
+        return 'BEL-' . str_pad($nuevoNumero, 6, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Calcular total pagado
+     */
+    public function totalPagado(): float
+    {
+        return (float) $this->pagos()->sum('monto');
+    }
+
+    /**
+     * Calcular saldo pendiente
+     */
+    public function saldoPendiente(): float
+    {
+        return (float) $this->total - $this->totalPagado();
     }
 }

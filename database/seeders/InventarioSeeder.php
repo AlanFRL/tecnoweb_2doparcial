@@ -19,7 +19,7 @@ class InventarioSeeder extends Seeder
                 'cantidad' => 5,  // 5 bolsas de 10kg
                 'costo_unitario' => 180.00,
                 'referencia' => 'Compra inicial - Factura #1234',
-                'empleado_id' => 2,
+                'usuario_id' => 2,
                 'proveedor_id' => 1
             ],
             [
@@ -29,7 +29,7 @@ class InventarioSeeder extends Seeder
                 'cantidad' => 4,  // 4 botellas de 5L
                 'costo_unitario' => 85.00,
                 'referencia' => 'Compra inicial - Factura #1235',
-                'empleado_id' => 2,
+                'usuario_id' => 2,
                 'proveedor_id' => 2
             ],
             [
@@ -39,7 +39,7 @@ class InventarioSeeder extends Seeder
                 'cantidad' => 5,  // 5 bidones de 5L
                 'costo_unitario' => 35.00,
                 'referencia' => 'Reposición - Factura #1240',
-                'empleado_id' => 2,
+                'usuario_id' => 2,
                 'proveedor_id' => 3
             ],
             [
@@ -49,7 +49,7 @@ class InventarioSeeder extends Seeder
                 'cantidad' => 4,  // 4 botellas de 2L
                 'costo_unitario' => 120.00,
                 'referencia' => 'Compra fragancias - Factura #1250',
-                'empleado_id' => 2,
+                'usuario_id' => 2,
                 'proveedor_id' => 4
             ],
             [
@@ -59,7 +59,7 @@ class InventarioSeeder extends Seeder
                 'cantidad' => 4,  // 4 botes de 3kg
                 'costo_unitario' => 95.00,
                 'referencia' => 'Compra quitamanchas - Factura #1255',
-                'empleado_id' => 2,
+                'usuario_id' => 2,
                 'proveedor_id' => 3
             ],
 
@@ -71,7 +71,7 @@ class InventarioSeeder extends Seeder
                 'cantidad' => -1,  // Devolvemos 1 bolsa defectuosa
                 'costo_unitario' => 180.00,
                 'referencia' => 'Devolución por producto defectuoso - Nota de crédito #NC-001',
-                'empleado_id' => 3,
+                'usuario_id' => 3,
                 'proveedor_id' => 1
             ],
             [
@@ -81,7 +81,7 @@ class InventarioSeeder extends Seeder
                 'cantidad' => -1,  // Devolvemos 1 botella con fuga
                 'costo_unitario' => 85.00,
                 'referencia' => 'Devolución por envase con fuga - Nota de crédito #NC-002',
-                'empleado_id' => 3,
+                'usuario_id' => 3,
                 'proveedor_id' => 2
             ],
 
@@ -93,7 +93,7 @@ class InventarioSeeder extends Seeder
                 'cantidad' => -1,  // Baja por derrame
                 'costo_unitario' => null,
                 'referencia' => 'Baja por derrame accidental en almacén',
-                'empleado_id' => 4,
+                'usuario_id' => 4,
                 'proveedor_id' => null
             ],
             [
@@ -103,7 +103,7 @@ class InventarioSeeder extends Seeder
                 'cantidad' => -1,  // Baja por vencimiento
                 'costo_unitario' => null,
                 'referencia' => 'Baja por fecha de vencimiento próxima',
-                'empleado_id' => 4,
+                'usuario_id' => 4,
                 'proveedor_id' => null
             ],
 
@@ -115,7 +115,7 @@ class InventarioSeeder extends Seeder
                 'cantidad' => 1,  // Proveedor nos devuelve producto en buen estado
                 'costo_unitario' => null,
                 'referencia' => 'Retorno de proveedor por devolución anterior - Guía #RET-001',
-                'empleado_id' => 2,
+                'usuario_id' => 2,
                 'proveedor_id' => 1
             ],
             [
@@ -125,7 +125,7 @@ class InventarioSeeder extends Seeder
                 'cantidad' => 1,  // Reposición del producto devuelto
                 'costo_unitario' => null,
                 'referencia' => 'Reposición por producto defectuoso - Guía #RET-002',
-                'empleado_id' => 2,
+                'usuario_id' => 2,
                 'proveedor_id' => 2
             ],
 
@@ -137,7 +137,7 @@ class InventarioSeeder extends Seeder
                 'cantidad' => 3,  // 3 bolsas adicionales
                 'costo_unitario' => 180.00,
                 'referencia' => 'Reposición octubre - Factura #1280',
-                'empleado_id' => 2,
+                'usuario_id' => 2,
                 'proveedor_id' => 1
             ],
             [
@@ -147,7 +147,7 @@ class InventarioSeeder extends Seeder
                 'cantidad' => 2,  // 2 botellas de fragancia
                 'costo_unitario' => 120.00,
                 'referencia' => 'Compra noviembre - Factura #1290',
-                'empleado_id' => 2,
+                'usuario_id' => 2,
                 'proveedor_id' => 4
             ],
             [
@@ -157,7 +157,7 @@ class InventarioSeeder extends Seeder
                 'cantidad' => 2,  // 2 botes de quitamanchas
                 'costo_unitario' => 95.00,
                 'referencia' => 'Reposición noviembre - Factura #1295',
-                'empleado_id' => 2,
+                'usuario_id' => 2,
                 'proveedor_id' => 3
             ]
         ];

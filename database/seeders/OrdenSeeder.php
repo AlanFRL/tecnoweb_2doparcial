@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Orden;
 use App\Models\OrdenDetalle;
 use App\Models\Cliente;
-use App\Models\Empleado;
+use App\Models\Usuario;
 use App\Models\Servicio;
 use Carbon\Carbon;
 
@@ -15,7 +15,7 @@ class OrdenSeeder extends Seeder
     public function run(): void
     {
         $clientes = Cliente::all();
-        $empleados = Empleado::all();
+        $usuarios = Usuario::all();
         $servicios = Servicio::all();
 
         // Orden 1: Alan Romero - Lavado de ropa 5kg (CONTADO, ENTREGADA)
@@ -31,7 +31,7 @@ class OrdenSeeder extends Seeder
             'descuento' => 0.00,
             'total' => 65.00,
             'cliente_id' => 1, // Alan Romero
-            'empleado_id' => 2,
+            'usuario_id' => 2, // Usuario empleado
             'observaciones' => 'Perfume Lavanda'
         ]);
 
@@ -62,7 +62,7 @@ class OrdenSeeder extends Seeder
             'descuento' => 40.00, // 28.57% de descuento
             'total' => 100.00,
             'cliente_id' => 2,
-            'empleado_id' => 3,
+            'usuario_id' => 3, // Usuario empleado
             'observaciones' => 'Promo Edredones de Temporada aplicada'
         ]);
 
@@ -93,7 +93,7 @@ class OrdenSeeder extends Seeder
             'descuento' => 0.00,
             'total' => 154.00,
             'cliente_id' => 3,
-            'empleado_id' => 2,
+            'usuario_id' => 2, // Usuario empleado
             'observaciones' => null
         ]);
 
@@ -138,7 +138,7 @@ class OrdenSeeder extends Seeder
             'descuento' => 0.00,
             'total' => 25.00,
             'cliente_id' => 4,
-            'empleado_id' => 3,
+            'usuario_id' => 3, // Usuario empleado
             'observaciones' => 'Zapatos deportivos blancos'
         ]);
 
@@ -169,7 +169,7 @@ class OrdenSeeder extends Seeder
             'descuento' => 0.00,
             'total' => 115.00,
             'cliente_id' => 5,
-            'empleado_id' => 2,
+            'usuario_id' => 2, // Usuario empleado
             'observaciones' => 'Pago con QR'
         ]);
 
@@ -214,7 +214,7 @@ class OrdenSeeder extends Seeder
             'descuento' => 0.00,
             'total' => 39.00,
             'cliente_id' => 6,
-            'empleado_id' => 3,
+            'usuario_id' => 3, // Usuario empleado
             'observaciones' => 'Lista para recoger'
         ]);
 
@@ -245,7 +245,7 @@ class OrdenSeeder extends Seeder
             'descuento' => 20.00, // 20% descuento
             'total' => 80.00,
             'cliente_id' => 7,
-            'empleado_id' => 2,
+            'usuario_id' => 2, // Usuario empleado
             'observaciones' => 'Promo Colchas - Cliente pagará en 2 cuotas'
         ]);
 
@@ -282,7 +282,7 @@ class OrdenSeeder extends Seeder
             'descuento' => 0.00,
             'total' => 91.00,
             'cliente_id' => 8,
-            'empleado_id' => 3,
+            'usuario_id' => 3, // Usuario empleado
             'observaciones' => null
         ]);
 
@@ -313,7 +313,7 @@ class OrdenSeeder extends Seeder
             'descuento' => 0.00,
             'total' => 70.00,
             'cliente_id' => 9,
-            'empleado_id' => 2,
+            'usuario_id' => 2, // Usuario empleado
             'observaciones' => null
         ]);
 
@@ -344,7 +344,7 @@ class OrdenSeeder extends Seeder
             'descuento' => 0.00,
             'total' => 40.00,
             'cliente_id' => 10,
-            'empleado_id' => 3,
+            'usuario_id' => 3, // Usuario empleado
             'observaciones' => null
         ]);
 
@@ -365,7 +365,7 @@ class OrdenSeeder extends Seeder
         // Órdenes 11-20 (adicionales rápidas)
         for ($i = 11; $i <= 20; $i++) {
             $clienteId = (($i - 1) % 10) + 1;
-            $empleadoId = (($i % 2) == 0) ? 2 : 3;
+            $usuarioId = (($i % 2) == 0) ? 2 : 3;
             $fechaRecepcion = Carbon::parse('2024-11-01')->addDays($i - 11);
             
             $esEntregada = $i <= 17;
@@ -388,7 +388,7 @@ class OrdenSeeder extends Seeder
                 'descuento' => 0.00,
                 'total' => $total,
                 'cliente_id' => $clienteId,
-                'empleado_id' => $empleadoId,
+                'usuario_id' => $usuarioId,
                 'observaciones' => null
             ]);
 

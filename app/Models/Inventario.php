@@ -17,7 +17,7 @@ class Inventario extends Model
         'cantidad',
         'costo_unitario',
         'referencia',
-        'empleado_id',
+        'usuario_id',
         'proveedor_id',
     ];
 
@@ -32,10 +32,10 @@ class Inventario extends Model
         return $this->belongsTo(Insumo::class, 'insumo_codigo', 'codigo');
     }
 
-    // Relación con Empleado
-    public function empleado(): BelongsTo
+    // Relación con Usuario (quien registró el movimiento)
+    public function usuario(): BelongsTo
     {
-        return $this->belongsTo(Empleado::class, 'empleado_id');
+        return $this->belongsTo(Usuario::class, 'usuario_id');
     }
 
     // Relación con Proveedor

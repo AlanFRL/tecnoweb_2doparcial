@@ -19,18 +19,16 @@ onMounted(() => {
 
 <template>
     <div>
-        <div class="min-h-screen">
-            <!-- Sidebar Layout -->
-            <div class="flex min-h-screen">
+        <div class="min-h-screen flex">
 
-                <!-- SIDEBAR -->
-                <aside class="sidebar w-64 flex flex-col">
-                    <div class="p-4 text-xl font-bold border-b text-white" style="border-color: rgba(255,255,255,0.2);">
-                        🧺 Lavandería Belén
-                    </div>
+            <!-- SIDEBAR FIJO -->
+            <aside class="sidebar w-64 h-screen fixed left-0 top-0 flex flex-col overflow-y-auto">
+                <div class="p-4 text-xl font-bold border-b text-white" style="border-color: rgba(255,255,255,0.2);">
+                    🧺 Lavandería Belén
+                </div>
 
-                    <nav class="flex-1 p-4">
-                        <ul class="space-y-2">
+                <nav class="flex-1 p-4 overflow-y-auto">
+                    <ul class="space-y-2">
 
                             <li v-for="item in $page.props.menu" :key="item.id">
 
@@ -92,10 +90,10 @@ onMounted(() => {
                     </div>
                 </aside>
 
-                <!-- MAIN CONTENT -->
-                <div class="flex-1">
-                    <!-- Page Heading -->
-                    <header class="shadow" v-if="$slots.header">
+                <!-- MAIN CONTENT CON MARGIN LEFT PARA EL SIDEBAR -->
+                <div class="flex-1 ml-64">
+                    <!-- Page Heading STICKY -->
+                    <header class="bg-white shadow sticky top-0 z-10" v-if="$slots.header">
                         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                             <slot name="header" />
                         </div>
@@ -106,11 +104,7 @@ onMounted(() => {
                         <slot />
                     </main>
                 </div>
-            </div>
 
-
-
-            
         </div>
     </div>
 </template>

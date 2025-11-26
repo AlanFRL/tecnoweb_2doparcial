@@ -36,4 +36,32 @@ class Servicio extends Model
         return $this->belongsToMany(Promocion::class, 'promocion_servicio', 'id_servicio', 'id_promocion')
             ->withPivot('fecha_inicio', 'fecha_final');
     }
+
+    /**
+     * Obtener la promoción activa para este servicio (si existe)
+     */
+    public function promocionActiva()
+    {
+        $hoy = now()->toDateString();
+        
+        return $this->promociones()
+            ->where('promocion.estado', true)
+            ->whereRaw('? BETWEEN promocion_servicio.fecha_inicio AND promocion_servicio.fecha_final', [$hoy])
+            ->orderBy('promocion.descuento', 'desc')
+            ->first();
+    }
+
+    /**
+     * Calcular descuento aplicable
+     */
+    public function calcularDescuento(float $subtotal): float
+    {
+        $promocion = $this->promocionActiva();
+        
+        if (!$promocion) {
+            return 0.00;
+        }
+
+        return round($subtotal * ($promocion->descuento / 100), 2);
+    }
 }

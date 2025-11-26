@@ -20,11 +20,11 @@ return new class extends Migration
             $table->decimal('descuento', 10, 2)->default(0);
             $table->decimal('total', 10, 2)->default(0);
             $table->unsignedBigInteger('cliente_id');
-            $table->unsignedBigInteger('empleado_id');
+            $table->unsignedBigInteger('usuario_id');
             $table->text('observaciones')->nullable();
             
             $table->foreign('cliente_id')->references('id')->on('cliente');
-            $table->foreign('empleado_id')->references('id')->on('empleado');
+            $table->foreign('usuario_id')->references('id')->on('usuario');
         });
     }
 

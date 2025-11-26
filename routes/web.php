@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ConfiguracionController;
+use App\Http\Controllers\OrdenController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -75,6 +76,28 @@ Route::middleware('auth')->group(function () {
     // CONFIGURACIÓN
     Route::get('/configuracion', [ConfiguracionController::class, 'index'])
         ->name('configuracion.index');
+
+    /**
+     * =========================
+     *        ÓRDENES
+     * =========================
+     */
+    Route::prefix('ordenes')->group(function () {
+        Route::get('/', [OrdenController::class, 'index'])
+            ->name('ordenes.index');
+
+        Route::get('/create', [OrdenController::class, 'create'])
+            ->name('ordenes.create');
+
+        Route::post('/', [OrdenController::class, 'store'])
+            ->name('ordenes.store');
+
+        Route::get('/{nro}', [OrdenController::class, 'show'])
+            ->name('ordenes.show');
+
+        Route::post('/{nro}/pago', [OrdenController::class, 'registrarPago'])
+            ->name('ordenes.pago');
+    });
 });
 
 require __DIR__.'/auth.php';
