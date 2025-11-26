@@ -1,3 +1,239 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ========================================
+   TIPOGRAFÍA MODERNA
+   ======================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ========================================
+   SISTEMA DE TEMAS - LAVANDERÍA BELÉN
+   ======================================== */
+
+:root {
+  /* Tamaños de fuente */
+  --font-size-base: 16px;
+  --font-size-large: 18px;
+  --font-size-xlarge: 20px;
+  
+  /* Tipografía base */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ========================================
+   TEMA KIDS 🧒 - Divertido y colorido
+   ======================================== */
+body.theme-kids {
+  --color-primary: #FF6B9D;
+  --color-primary-dark: #E85A8A;
+  --color-secondary: #FFA07A;
+  --color-accent: #FFD93D;
+  --color-bg: #FFF8DC;
+  --color-bg-secondary: #FFE4E1;
+  --color-text: #4A4A4A;
+  --color-text-secondary: #6B6B6B;
+  --color-sidebar: #FF6B9D;
+  --color-sidebar-hover: #E85A8A;
+  --color-border: #FFB6C1;
+  --color-card: #FFFFFF;
+  --color-shadow: rgba(255, 107, 157, 0.2);
+  
+  font-family: 'Quicksand', 'Fredoka', 'Comic Sans MS', cursive, sans-serif;
+}
+
+body.theme-kids.dark {
+  --color-bg: #2D1B2E;
+  --color-bg-secondary: #3F2E40;
+  --color-text: #FFE4E1;
+  --color-text-secondary: #D4B5D4;
+  --color-card: #3F2E40;
+  --color-border: #6B4568;
+  --color-shadow: rgba(255, 107, 157, 0.3);
+}
+
+/* ========================================
+   TEMA YOUNG 🎮 - Moderno y tecnológico
+   ======================================== */
+body.theme-young {
+  --color-primary: #6366F1;
+  --color-primary-dark: #4F46E5;
+  --color-secondary: #8B5CF6;
+  --color-accent: #06B6D4;
+  --color-bg: #F8FAFC;
+  --color-bg-secondary: #F1F5F9;
+  --color-text: #1E293B;
+  --color-text-secondary: #475569;
+  --color-sidebar: #6366F1;
+  --color-sidebar-hover: #4F46E5;
+  --color-border: #CBD5E1;
+  --color-card: #FFFFFF;
+  --color-shadow: rgba(99, 102, 241, 0.15);
+  
+  font-family: 'Inter', 'Segoe UI', -apple-system, sans-serif;
+}
+
+body.theme-young.dark {
+  --color-bg: #0F172A;
+  --color-bg-secondary: #1E293B;
+  --color-text: #F1F5F9;
+  --color-text-secondary: #CBD5E1;
+  --color-card: #1E293B;
+  --color-border: #334155;
+  --color-shadow: rgba(99, 102, 241, 0.3);
+}
+
+/* ========================================
+   TEMA CLASSIC 👔 - Profesional y elegante
+   ======================================== */
+body.theme-classic {
+  --color-primary: #1E40AF;
+  --color-primary-dark: #1E3A8A;
+  --color-secondary: #047857;
+  --color-accent: #D97706;
+  --color-bg: #F9FAFB;
+  --color-bg-secondary: #F3F4F6;
+  --color-text: #111827;
+  --color-text-secondary: #4B5563;
+  --color-sidebar: #1E40AF;
+  --color-sidebar-hover: #1E3A8A;
+  --color-border: #D1D5DB;
+  --color-card: #FFFFFF;
+  --color-shadow: rgba(0, 0, 0, 0.1);
+  
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+body.theme-classic.dark {
+  --color-bg: #111827;
+  --color-bg-secondary: #1F2937;
+  --color-text: #F9FAFB;
+  --color-text-secondary: #D1D5DB;
+  --color-card: #1F2937;
+  --color-border: #374151;
+  --color-shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   TAMAÑOS DE FUENTE
+   ======================================== */
+body.font-normal {
+  font-size: var(--font-size-base);
+}
+
+body.font-large {
+  font-size: var(--font-size-large);
+}
+
+body.font-xlarge {
+  font-size: var(--font-size-xlarge);
+}
+
+/* ========================================
+   ALTO CONTRASTE
+   ======================================== */
+body.high-contrast {
+  --color-text: #000000;
+  --color-bg: #FFFFFF;
+  --color-border: #000000;
+  filter: contrast(1.3);
+}
+
+body.high-contrast.dark {
+  --color-text: #FFFFFF;
+  --color-bg: #000000;
+  filter: contrast(1.5);
+}
+
+/* ========================================
+   APLICACIÓN DE VARIABLES CSS
+   ======================================== */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: var(--color-sidebar) !important;
+  border-color: var(--color-border);
+  color: white !important;
+}
+
+.sidebar-item {
+  color: white !important;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-item:hover {
+  background-color: var(--color-sidebar-hover) !important;
+}
+
+/* Cards */
+.card {
+  background-color: var(--color-card);
+  border-color: var(--color-border);
+  box-shadow: 0 1px 3px var(--color-shadow);
+}
+
+/* Botones */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: white;
+}
+
+/* Inputs */
+input, textarea, select {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--color-primary);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Headers */
+header {
+  background-color: var(--color-card);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Text colors */
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+/* Links */
+a {
+  color: var(--color-primary);
+}
+
+a:hover {
+  color: var(--color-primary-dark);
+}
+
+/* Utilidades para modo oscuro en Tailwind */
+.dark\:bg-card {
+  background-color: var(--color-card);
+}
+
+.dark\:text-primary {
+  color: var(--color-text);
+}
+
+.dark\:border-primary {
+  border-color: var(--color-border);
+}

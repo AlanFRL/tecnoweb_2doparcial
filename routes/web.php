@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ConfiguracionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -70,6 +71,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('/clientes/{id}', [ClienteController::class, 'destroy'])
             ->name('usuarios.clientes.destroy');
     });
+
+    // CONFIGURACIÓN
+    Route::get('/configuracion', [ConfiguracionController::class, 'index'])
+        ->name('configuracion.index');
 });
 
 require __DIR__.'/auth.php';
