@@ -15,8 +15,6 @@ const props = defineProps({
 
 // Modal de pago
 const mostrarModalPago = ref(false);
-const mostrarModalQR = ref(false);
-const qrGenerado = ref(null);
 
 // Form de pago
 const formPago = useForm({
@@ -35,30 +33,13 @@ const abrirModalPago = () => {
 // Procesar pago
 const procesarPago = () => {
     if (formPago.metodo === 'QR') {
-        // Simular generación de QR
-        generarQRSimulado();
+        mostrarModalPago.value = false;
+        // Redirigir al flujo real de QR
+        router.visit(route('ordenes.pago-qr', props.orden.nro));
     } else {
         // Pago en efectivo directo
         registrarPago();
     }
-};
-
-// Generar QR simulado
-const generarQRSimulado = () => {
-    const timestamp = Date.now();
-    qrGenerado.value = {
-        codigo: `TRX-QR-${timestamp}`,
-        imagen: 'https://via.placeholder.com/300x300/4F46E5/FFFFFF?text=QR+SIMULADO',
-        monto: formPago.monto,
-        orden: props.orden.nro,
-    };
-    mostrarModalQR.value = true;
-};
-
-// Confirmar pago QR
-const confirmarPagoQR = () => {
-    formPago.referencia = `${qrGenerado.value.codigo} - PagoFácil`;
-    registrarPago();
 };
 
 // Registrar pago en BD
@@ -355,9 +336,7 @@ const irAPagoQr = () => {
         <Modal :show="mostrarModalPago" @close="mostrarModalPago = false">
             <div class="p-6">
                 <h3 class="text-lg font-semibold mb-4">💵 Registrar Pago</h3>
-                
                 <form @submit.prevent="procesarPago">
-                    
                     <div class="mb-4">
                         <InputLabel for="monto" value="Monto (Bs.) *" />
                         <TextInput
@@ -374,7 +353,6 @@ const irAPagoQr = () => {
                             Saldo pendiente: Bs. {{ parseFloat(orden.saldo_pendiente).toFixed(2) }}
                         </p>
                     </div>
-
                     <div class="mb-4">
                         <InputLabel for="metodo" value="Método de Pago *" />
                         <select
@@ -388,54 +366,15 @@ const irAPagoQr = () => {
                         </select>
                         <InputError class="mt-2" :message="formPago.errors.metodo" />
                     </div>
-
                     <div class="flex justify-center gap-3">
-                        <SecondaryButton @click="mostrarModalQR = false">
+                        <SecondaryButton @click="mostrarModalPago = false">
                             Cancelar
                         </SecondaryButton>
-                        <PrimaryButton @click="confirmarPagoQR" :disabled="formPago.processing">
+                        <PrimaryButton type="submit" :disabled="formPago.processing">
                             ✅ Confirmar Pago
                         </PrimaryButton>
                     </div>
                 </form>
-            </div>
-        </Modal>
-
-        <!-- Modal QR Simulado -->
-        <Modal :show="mostrarModalQR" @close="mostrarModalQR = false">
-            <div class="p-6 text-center">
-                <h3 class="text-lg font-semibold mb-4">📱 QR Generado - PagoFácil (SIMULADO)</h3>
-                
-                <div class="mb-6">
-                    <img 
-                        :src="qrGenerado?.imagen" 
-                        alt="QR Code" 
-                        class="mx-auto rounded-lg shadow-lg"
-                    />
-                </div>
-
-                <div class="mb-4 text-left bg-gray-50 p-4 rounded-md">
-                    <p><strong>Orden:</strong> {{ qrGenerado?.orden }}</p>
-                    <p><strong>Monto:</strong> Bs. {{ qrGenerado?.monto }}</p>
-                    <p><strong>Código:</strong> {{ qrGenerado?.codigo }}</p>
-                </div>
-
-                <div class="bg-yellow-50 border border-yellow-200 rounded-md p-3 mb-4">
-                    <p class="text-sm text-yellow-800">
-                        ⚠️ <strong>Simulación:</strong> Este es un QR simulado. 
-                        En producción, aquí se mostraría el QR real de PagoFácil y se esperaría 
-                        el callback de confirmación.
-                    </p>
-                </div>
-
-                <div class="flex justify-center gap-3">
-                    <SecondaryButton @click="mostrarModalQR = false">
-                        Cancelar
-                    </SecondaryButton>
-                    <PrimaryButton @click="confirmarPagoQR" :disabled="formPago.processing">
-                        ✅ Confirmar Pago
-                    </PrimaryButton>
-                </div>
             </div>
         </Modal>
     </AuthenticatedLayout>

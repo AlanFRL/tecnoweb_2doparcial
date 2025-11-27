@@ -15,66 +15,13 @@ const props = defineProps({
     realAmount: Number,
 });
 
-const verificando = ref(false);
+
 const mensaje = ref('');
 const mensajeTipo = ref(''); // 'success', 'error', 'info'
-const autoVerificacion = ref(null);
 
-const verificarPago = async () => {
-    verificando.value = true;
-    mensaje.value = '';
-
-    try {
-        const response = await fetch(route('ordenes.pago-qr.verificar', props.orden.nro), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-            },
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            mensajeTipo.value = 'success';
-            mensaje.value = data.message;
-
-            // Redirigir después de 2 segundos
-            setTimeout(() => {
-                router.visit(data.redirect);
-            }, 2000);
-
-            // Detener verificación automática
-            if (autoVerificacion.value) {
-                clearInterval(autoVerificacion.value);
-            }
-        } else {
-            mensajeTipo.value = data.status === 1 ? 'info' : 'error';
-            mensaje.value = data.message;
-        }
-    } catch (error) {
-        mensajeTipo.value = 'error';
-        mensaje.value = 'Error al verificar el pago. Intente nuevamente.';
-    } finally {
-        verificando.value = false;
-    }
+const recargarPagina = () => {
+    window.location.reload();
 };
-
-
-// Verificación automática cada 5 segundos
-onMounted(() => {
-    autoVerificacion.value = setInterval(() => {
-        if (!verificando.value) {
-            verificarPago();
-        }
-    }, 5000); // 5 segundos
-});
-
-onUnmounted(() => {
-    if (autoVerificacion.value) {
-        clearInterval(autoVerificacion.value);
-    }
-});
 
 const volver = () => {
     router.visit(route('ordenes.show', props.orden.nro));
@@ -179,36 +126,20 @@ const volver = () => {
                                 <li>Busca la opción de "Pagar con QR" o "Escanear QR"</li>
                                 <li>Escanea el código QR mostrado arriba</li>
                                 <li>Confirma el pago de <strong>{{ testAmount.toFixed(2) }} Bs</strong></li>
-                                <li>Haz clic en "Verificar Pago" o espera la verificación automática</li>
+                                <li>Haz clic en <strong>Refrescar estado</strong> después de realizar el pago para ver la confirmación.</li>
                             </ol>
-                            <p class="text-xs text-blue-600 mt-2">
-                                ℹ️ El sistema verifica automáticamente cada <strong>5 segundos</strong> y te avisará en cuanto el pago sea confirmado.
-                            </p>
-                            <p v-if="mensajeTipo !== 'success'" class="text-xs text-blue-700 mt-1">
-                                Por favor, no cierres ni recargues esta página hasta que se confirme el pago.
+                            <p class="text-xs text-blue-700 mt-2">
+                                Por favor, no cierres ni recargues esta página hasta que se confirme el pago.<br>
+                                Si ya pagaste, haz clic en <strong>Refrescar estado</strong> para actualizar.
                             </p>
                         </div>
 
                         <!-- Botones de acción -->
                         <div class="flex gap-3">
-                            <PrimaryButton
-                                @click="verificarPago"
-                                :disabled="verificando || mensajeTipo === 'success'"
-                                class="flex-1"
-                            >
-                                <span v-if="verificando" class="flex items-center justify-center">
-                                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    Verificando...
-                                </span>
-                                <span v-else>
-                                    🔄 Verificar Pago
-                                </span>
+                            <PrimaryButton @click="recargarPagina" class="flex-1">
+                                🔄 Refrescar estado
                             </PrimaryButton>
-
-                            <SecondaryButton @click="volver" class="flex-1" :disabled="mensajeTipo === 'success'">
+                            <SecondaryButton @click="volver" class="flex-1">
                                 ⬅️ Volver a la orden
                             </SecondaryButton>
                         </div>
