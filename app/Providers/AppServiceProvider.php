@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL; // <- AÑADIR
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -21,6 +22,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // 🔒 Forzar https en producción
+        if (config('app.env') === 'production') {
+            URL::forceScheme('https');
+        }
+        
         Inertia::share('menu', function () {
             if (!Auth::check()) {
                 return [];
