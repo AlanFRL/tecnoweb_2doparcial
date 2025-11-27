@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import { Head, Link } from '@inertiajs/vue3'
 
 const props = defineProps({
-  usuarios: {
+  clientes: {
     type: Array,
     default: () => [],
   },
@@ -12,71 +12,60 @@ const props = defineProps({
 
 <template>
   <AuthenticatedLayout>
-    <Head title="Gestión de Empleados" />
+    <Head title="Gestión de Clientes" />
 
-    <!-- HEADER -->
     <template #header>
       <div class="flex items-center justify-between">
         <h2 class="text-xl font-semibold text-gray-800">
-          Gestión de Empleados
+          Gestión de Clientes
         </h2>
 
         <Link
-          :href="route('usuarios.empleados.create')"
+          :href="route('usuarios.clientes.create')"
           class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700"
         >
-          + Nuevo Empleado
+          + Nuevo Cliente
         </Link>
       </div>
     </template>
 
-    <!-- CONTENIDO -->
     <div class="py-6">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white shadow-sm rounded-lg overflow-hidden">
           <div class="p-4 sm:p-6">
-
             <div class="overflow-x-auto">
               <table class="min-w-full text-sm text-left">
                 <thead>
                   <tr class="border-b bg-gray-50 text-gray-700">
-                    <th class="px-3 py-2">ID</th>
+                    <th class="px-3 py-2">#</th>
                     <th class="px-3 py-2">Nombre</th>
                     <th class="px-3 py-2">Email</th>
-                    <th class="px-3 py-2">Tipo</th>
-                    <th class="px-3 py-2">Estado</th>
+                    <th class="px-3 py-2">Teléfono</th>
+                    <th class="px-3 py-2">Dirección</th>
                     <th class="px-3 py-2 text-center">Acciones</th>
                   </tr>
                 </thead>
-
                 <tbody>
                   <tr
-                    v-for="u in usuarios"
-                    :key="u.id"
+                    v-for="c in clientes"
+                    :key="c.id"
                     class="border-b hover:bg-gray-50"
                   >
-                    <td class="px-3 py-2">{{ u.id }}</td>
-                    <td class="px-3 py-2">{{ u.nombre }}</td>
-                    <td class="px-3 py-2">{{ u.email }}</td>
-                    <td class="px-3 py-2 capitalize">{{ u.tipo_usuario }}</td>
-                    <td class="px-3 py-2">
-                      <span
-                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold"
-                        :class="u.estado ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
-                      >
-                        {{ u.estado ? 'Activo' : 'Inactivo' }}
-                      </span>
-                    </td>
+                    <td class="px-3 py-2">{{ c.id }}</td>
+                    <td class="px-3 py-2">{{ c.nombre }}</td>
+                    <td class="px-3 py-2">{{ c.email ?? '-' }}</td>
+                    <td class="px-3 py-2">{{ c.telefono ?? '-' }}</td>
+                    <td class="px-3 py-2">{{ c.direccion ?? '-' }}</td>
                     <td class="px-3 py-2 text-center space-x-2">
                       <Link
-                        :href="route('usuarios.empleados.edit', u.id)"
+                        :href="route('usuarios.clientes.edit', c.id)"
                         class="text-blue-600 hover:underline text-xs"
                       >
                         Editar
                       </Link>
 
                       <Link
-                        :href="route('usuarios.empleados.destroy', u.id)"
+                        :href="route('usuarios.clientes.destroy', c.id)"
                         method="delete"
                         as="button"
                         class="text-red-600 hover:underline text-xs"
@@ -86,16 +75,14 @@ const props = defineProps({
                     </td>
                   </tr>
 
-                  <!-- Cuando no hay empleados -->
-                  <tr v-if="usuarios.length === 0">
+                  <tr v-if="clientes.length === 0">
                     <td colspan="6" class="px-3 py-4 text-center text-gray-500">
-                      No hay empleados registrados.
+                      No hay clientes registrados.
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-
           </div>
         </div>
       </div>

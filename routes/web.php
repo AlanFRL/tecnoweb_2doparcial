@@ -12,6 +12,10 @@ use Inertia\Inertia;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ClienteController;
 
+// 🔹 NUEVOS CONTROLADORES
+use App\Http\Controllers\InsumoController;
+use App\Http\Controllers\InventarioController;
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -22,7 +26,9 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
 
+    // =========================
     // PERFIL
+    // =========================
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -75,7 +81,9 @@ Route::middleware('auth')->group(function () {
             ->name('usuarios.clientes.destroy');
     });
 
+    // =========================
     // CONFIGURACIÓN
+    // =========================
     Route::get('/configuracion', [ConfiguracionController::class, 'index'])
         ->name('configuracion.index');
 
@@ -108,6 +116,48 @@ Route::middleware('auth')->group(function () {
         Route::post('/{nro}/pago-qr/verificar', [PagoQrController::class, 'verificarPago'])
             ->name('ordenes.pago-qr.verificar');
     });
+
+
+    /**
+     * =========================
+     *        INSUMOS
+     * =========================
+     *
+     *  - /insumos                -> listado + inventario resumido
+     *  - /insumos/create         -> crear insumo
+     *  - /insumos/{insumo}/edit  -> editar insumo
+     *  - /insumos/{insumo}/...   -> kardex de inventario
+     */
+    Route::prefix('insumos')->group(function () {
+
+        // CRUD Insumos
+        Route::get('/', [InsumoController::class, 'index'])->name('insumos.index');
+        Route::get('/create', [InsumoController::class, 'create'])->name('insumos.create');
+        Route::post('/', [InsumoController::class, 'store'])->name('insumos.store');
+        Route::get('/{insumo}/edit', [InsumoController::class, 'edit'])->name('insumos.edit');
+        Route::put('/{insumo}', [InsumoController::class, 'update'])->name('insumos.update');
+        Route::delete('/{insumo}', [InsumoController::class, 'destroy'])->name('insumos.destroy');
+
+        // CRUD Movimientos de Inventario por Insumo
+        Route::get('/{insumo}/inventario', [InventarioController::class, 'index'])
+            ->name('insumos.inventario.index');
+
+        Route::get('/{insumo}/inventario/create', [InventarioController::class, 'create'])
+            ->name('insumos.inventario.create');
+
+        Route::post('/{insumo}/inventario', [InventarioController::class, 'store'])
+            ->name('insumos.inventario.store');
+
+        Route::get('/{insumo}/inventario/{movimiento}/edit', [InventarioController::class, 'edit'])
+            ->name('insumos.inventario.edit');
+
+        Route::put('/{insumo}/inventario/{movimiento}', [InventarioController::class, 'update'])
+            ->name('insumos.inventario.update');
+
+        Route::delete('/{insumo}/inventario/{movimiento}', [InventarioController::class, 'destroy'])
+            ->name('insumos.inventario.destroy');
+    });
+
 
     /**
      * =========================

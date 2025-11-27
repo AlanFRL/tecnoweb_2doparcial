@@ -4,31 +4,46 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ClienteController extends Controller
 {
     public function index()
     {
-        $clientes = Cliente::all();
-        return response()->json($clientes);
+        $clientes = Cliente::orderBy('id', 'ASC')->get();
+
+        return Inertia::render('Usuarios/Clientes/Index', [
+            'clientes' => $clientes,
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('Usuarios/Clientes/Create');
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:50',
+            'nombre'    => 'required|string|max:50',
             'direccion' => 'nullable|string',
-            'telefono' => 'nullable|string|max:20',
+            'telefono'  => 'nullable|string|max:20',
         ]);
 
-        $cliente = Cliente::create($validated);
-        return response()->json($cliente, 201);
+        Cliente::create($validated);
+
+        return redirect()
+            ->route('usuarios.clientes.index')
+            ->with('success', 'Cliente creado correctamente.');
     }
 
-    public function show($id)
+    public function edit($id)
     {
         $cliente = Cliente::findOrFail($id);
-        return response()->json($cliente);
+
+        return Inertia::render('Usuarios/Clientes/Edit', [
+            'cliente' => $cliente,
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -36,19 +51,25 @@ class ClienteController extends Controller
         $cliente = Cliente::findOrFail($id);
 
         $validated = $request->validate([
-            'nombre' => 'required|string|max:50',
+            'nombre'    => 'required|string|max:50',
             'direccion' => 'nullable|string',
-            'telefono' => 'nullable|string|max:20',
+            'telefono'  => 'nullable|string|max:20',
         ]);
 
         $cliente->update($validated);
-        return response()->json($cliente);
+
+        return redirect()
+            ->route('usuarios.clientes.index')
+            ->with('success', 'Cliente actualizado correctamente.');
     }
 
     public function destroy($id)
     {
         $cliente = Cliente::findOrFail($id);
         $cliente->delete();
-        return response()->json(['message' => 'Cliente eliminado correctamente']);
+
+        return redirect()
+            ->route('usuarios.clientes.index')
+            ->with('success', 'Cliente eliminado correctamente.');
     }
 }
