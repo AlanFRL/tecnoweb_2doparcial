@@ -34,8 +34,8 @@ const abrirModalPago = () => {
 const procesarPago = () => {
     if (formPago.metodo === 'QR') {
         mostrarModalPago.value = false;
-        // Redirigir al flujo real de QR
-        router.visit(route('ordenes.pago-qr', props.orden.nro));
+        // Redirigir al flujo real de QR, pasando el monto como query param
+        router.visit(route('ordenes.pago-qr', [props.orden.nro], { monto: formPago.monto }));
     } else {
         // Pago en efectivo directo
         registrarPago();
