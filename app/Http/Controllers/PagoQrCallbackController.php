@@ -17,7 +17,9 @@ class PagoQrCallbackController extends Controller
     {
         Log::info('Callback PagoFacil recibido', $request->all());
 
-        $pedidoId = $request->input('PedidoID'); // orden.nro
+        $pedidoId = $request->input('PedidoID'); // puede ser 'BEL-000007' o 'BEL-000007-abonoN'
+        // Extraer el número de orden real (antes de '-abonoN' si existe)
+        $ordenNro = preg_replace('/-abono\d+$/', '', $pedidoId);
         $estado   = (int) $request->input('Estado');
         $fecha    = $request->input('Fecha');
         $hora     = $request->input('Hora');
@@ -33,7 +35,7 @@ class PagoQrCallbackController extends Controller
             ], 400);
         }
 
-        $orden = Orden::find($pedidoId);
+        $orden = Orden::find($ordenNro);
 
         if (!$orden) {
             // Orden no encontrada, pero respondemos 200 para evitar estado 5
