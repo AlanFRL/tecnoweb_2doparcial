@@ -117,10 +117,9 @@ class PagoQrController extends Controller
 
             // Estado 2 = Pagado
             if ($status === 2) {
-                // Verificar si ya no se registró el pago
+                // Verificar si ya existe algún pago QR registrado para la orden
                 $pagoExistente = Pago::where('orden_nro', $orden->nro)
                     ->where('metodo', 'QR')
-                    ->where('referencia', 'LIKE', '%' . ($values['transactionId'] ?? '') . '%')
                     ->first();
 
                 if (!$pagoExistente) {
