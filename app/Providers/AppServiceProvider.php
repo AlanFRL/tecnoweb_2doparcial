@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Providers;
+
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Vite;
@@ -26,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.env') === 'production') {
             URL::forceScheme('https');
         }
-        
+
         Inertia::share('menu', function () {
             if (!Auth::check()) {
                 return [];
@@ -41,6 +42,17 @@ class AppServiceProvider extends ServiceProvider
                 ->where('pm.tipo_usuario', $tipo)
                 ->orderBy('m.id')
                 ->get();
+
+            // 🔗 NORMALIZAR RUTAS DEL MENÚ
+            $menus = $menus->map(function ($menu) {
+                if (isset($menu->ruta) && $menu->ruta) {
+                    // Si no es ya absoluta (http...), la hacemos absoluta con APP_URL
+                    if (!str_starts_with($menu->ruta, 'http')) {
+                        $menu->ruta = url($menu->ruta);
+                    }
+                }
+                return $menu;
+            });
 
             // Construir menú jerárquico (padre → hijos)
             $menuFinal = [];
