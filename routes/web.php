@@ -15,6 +15,8 @@ use App\Http\Controllers\ClienteController;
 // 🔹 NUEVOS CONTROLADORES
 use App\Http\Controllers\InsumoController;
 use App\Http\Controllers\InventarioController;
+use App\Http\Controllers\ReportePagoController;
+
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -25,6 +27,14 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+
+       /**
+     * =========================
+     *        REPORTES
+     * =========================
+     */
+    Route::get('/reportes', [ReportePagoController::class, 'index'])
+        ->name('reportes.index');
 
     // =========================
     // PERFIL
