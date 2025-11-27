@@ -3,63 +3,89 @@
 namespace App\Http\Controllers;
 
 use App\Models\Insumo;
+use App\Models\Inventario;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class InsumoController extends Controller
 {
     public function index()
     {
-        $insumos = Insumo::all();
-        return response()->json($insumos);
+        $insumos = Insumo::orderBy('codigo')->get();
+
+        // Movimientos recientes (solo para mostrar en la misma sección)
+        $movimientosRecientes = Inventario::with('insumo')
+            ->orderBy('fecha', 'desc')
+            ->orderBy('id', 'desc')
+            ->limit(20)
+            ->get();
+
+        return Inertia::render('Insumos/Index', [
+            'insumos'   => $insumos,
+            'movimientos' => $movimientosRecientes,
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('Insumos/Create');
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'codigo' => 'required|string|max:20|unique:insumo,codigo',
-            'nombre' => 'required|string|max:100',
-            'cantidad' => 'required|integer|min:1',
-            'unidad_medida' => 'required|in:GR,ML',
-            'stock' => 'nullable|numeric|min:0',
-            'stock_min' => 'nullable|numeric|min:0',
-            'stock_max' => 'nullable|numeric|min:0',
-            'costo_promedio' => 'nullable|numeric|min:0',
-            'estado' => 'boolean',
+        $data = $request->validate([
+            'codigo'         => 'required|string|max:20|unique:insumo,codigo',
+            'nombre'         => 'required|string|max:255',
+            'cantidad'       => 'required|numeric|min:0',
+            'unidad_medida'  => 'required|string|max:10',
+            'stock'          => 'required|numeric|min:0',
+            'stock_min'      => 'required|numeric|min:0',
+            'stock_max'      => 'required|numeric|min:0',
+            'costo_promedio' => 'required|numeric|min:0',
+            'estado'         => 'required|boolean',
         ]);
 
-        $insumo = Insumo::create($validated);
-        return response()->json($insumo, 201);
+        Insumo::create($data);
+
+        return redirect()
+            ->route('insumos.index')
+            ->with('success', 'Insumo creado correctamente.');
     }
 
-    public function show($codigo)
+    public function edit(Insumo $insumo)
     {
-        $insumo = Insumo::with('movimientos')->findOrFail($codigo);
-        return response()->json($insumo);
+        return Inertia::render('Insumos/Edit', [
+            'insumo' => $insumo,
+        ]);
     }
 
-    public function update(Request $request, $codigo)
+    public function update(Request $request, Insumo $insumo)
     {
-        $insumo = Insumo::findOrFail($codigo);
-
-        $validated = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'cantidad' => 'required|integer|min:1',
-            'unidad_medida' => 'required|in:GR,ML',
-            'stock' => 'nullable|numeric|min:0',
-            'stock_min' => 'nullable|numeric|min:0',
-            'stock_max' => 'nullable|numeric|min:0',
-            'costo_promedio' => 'nullable|numeric|min:0',
-            'estado' => 'boolean',
+        $data = $request->validate([
+            'codigo'         => 'required|string|max:20|unique:insumo,codigo,' . $insumo->codigo . ',codigo',
+            'nombre'         => 'required|string|max:255',
+            'cantidad'       => 'required|numeric|min:0',
+            'unidad_medida'  => 'required|string|max:10',
+            'stock'          => 'required|numeric|min:0',
+            'stock_min'      => 'required|numeric|min:0',
+            'stock_max'      => 'required|numeric|min:0',
+            'costo_promedio' => 'required|numeric|min:0',
+            'estado'         => 'required|boolean',
         ]);
 
-        $insumo->update($validated);
-        return response()->json($insumo);
+        $insumo->update($data);
+
+        return redirect()
+            ->route('insumos.index')
+            ->with('success', 'Insumo actualizado correctamente.');
     }
 
-    public function destroy($codigo)
+    public function destroy(Insumo $insumo)
     {
-        $insumo = Insumo::findOrFail($codigo);
         $insumo->delete();
-        return response()->json(['message' => 'Insumo eliminado correctamente']);
+
+        return redirect()
+            ->route('insumos.index')
+            ->with('success', 'Insumo eliminado correctamente.');
     }
 }

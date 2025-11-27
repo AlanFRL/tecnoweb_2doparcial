@@ -2,63 +2,90 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Insumo;
 use App\Models\Inventario;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class InventarioController extends Controller
 {
-    public function index()
+    // Lista de movimientos para un insumo
+    public function index(Insumo $insumo)
     {
-        $inventario = Inventario::with(['insumo', 'empleado', 'proveedor'])->get();
-        return response()->json($inventario);
+        $movimientos = $insumo->movimientos()
+            ->orderBy('fecha', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return Inertia::render('Insumos/Inventario/Index', [
+            'insumo'      => $insumo,
+            'movimientos' => $movimientos,
+        ]);
     }
 
-    public function store(Request $request)
+    public function create(Insumo $insumo)
     {
-        $validated = $request->validate([
-            'insumo_codigo' => 'required|exists:insumo,codigo',
-            'tipo' => 'nullable|in:INGRESO,AJUSTE,BAJA,RETORNO',
-            'fecha' => 'nullable|date',
-            'cantidad' => 'required|integer',
-            'costo_unitario' => 'nullable|numeric|min:0',
-            'referencia' => 'nullable|string',
-            'empleado_id' => 'nullable|exists:empleado,id',
-            'proveedor_id' => 'nullable|exists:proveedor,id',
+        return Inertia::render('Insumos/Inventario/Create', [
+            'insumo' => $insumo,
+        ]);
+    }
+
+    public function store(Request $request, Insumo $insumo)
+    {
+        $data = $request->validate([
+            'tipo'          => 'required|string|max:20',  // ENTRADA / SALIDA
+            'fecha'         => 'required|date',
+            'cantidad'      => 'required|numeric|min:0',
+            'costo_unitario'=> 'required|numeric|min:0',
+            'referencia'    => 'nullable|string|max:255',
+            'usuario_id'    => 'nullable|integer',
+            'proveedor_id'  => 'nullable|integer',
         ]);
 
-        $inventario = Inventario::create($validated);
-        return response()->json($inventario, 201);
+        $data['insumo_codigo'] = $insumo->codigo;
+
+        Inventario::create($data);
+
+        // (Opcional) Actualizar stock del insumo aquí si quieres
+
+        return redirect()
+            ->route('insumos.inventario.index', $insumo->codigo)
+            ->with('success', 'Movimiento registrado.');
     }
 
-    public function show($id)
+    public function edit(Insumo $insumo, Inventario $movimiento)
     {
-        $inventario = Inventario::with(['insumo', 'empleado', 'proveedor'])->findOrFail($id);
-        return response()->json($inventario);
+        return Inertia::render('Insumos/Inventario/Edit', [
+            'insumo'     => $insumo,
+            'movimiento' => $movimiento,
+        ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Insumo $insumo, Inventario $movimiento)
     {
-        $inventario = Inventario::findOrFail($id);
-
-        $validated = $request->validate([
-            'insumo_codigo' => 'required|exists:insumo,codigo',
-            'tipo' => 'nullable|in:INGRESO,AJUSTE,BAJA,RETORNO',
-            'fecha' => 'nullable|date',
-            'cantidad' => 'required|integer',
-            'costo_unitario' => 'nullable|numeric|min:0',
-            'referencia' => 'nullable|string',
-            'empleado_id' => 'nullable|exists:empleado,id',
-            'proveedor_id' => 'nullable|exists:proveedor,id',
+        $data = $request->validate([
+            'tipo'          => 'required|string|max:20',
+            'fecha'         => 'required|date',
+            'cantidad'      => 'required|numeric|min:0',
+            'costo_unitario'=> 'required|numeric|min:0',
+            'referencia'    => 'nullable|string|max:255',
+            'usuario_id'    => 'nullable|integer',
+            'proveedor_id'  => 'nullable|integer',
         ]);
 
-        $inventario->update($validated);
-        return response()->json($inventario);
+        $movimiento->update($data);
+
+        return redirect()
+            ->route('insumos.inventario.index', $insumo->codigo)
+            ->with('success', 'Movimiento actualizado.');
     }
 
-    public function destroy($id)
+    public function destroy(Insumo $insumo, Inventario $movimiento)
     {
-        $inventario = Inventario::findOrFail($id);
-        $inventario->delete();
-        return response()->json(['message' => 'Movimiento de inventario eliminado correctamente']);
+        $movimiento->delete();
+
+        return redirect()
+            ->route('insumos.inventario.index', $insumo->codigo)
+            ->with('success', 'Movimiento eliminado.');
     }
 }
