@@ -57,7 +57,7 @@ class PagoQrController extends Controller
             })->toArray();
 
             // 5) Armar payload con monto de prueba (0.10 Bs)
-            $testAmount = config('pagofacil.test_amount', 0.10);
+            $testAmount = (float) config('pagofacil.test_amount', 0.10);
 
             $payload = [
                 'paymentMethod' => $paymentMethodId,

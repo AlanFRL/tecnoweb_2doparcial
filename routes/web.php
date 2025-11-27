@@ -79,6 +79,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/configuracion', [ConfiguracionController::class, 'index'])
         ->name('configuracion.index');
 
+
     /**
      * =========================
      *        ÓRDENES
@@ -107,6 +108,17 @@ Route::middleware('auth')->group(function () {
         Route::post('/{nro}/pago-qr/verificar', [PagoQrController::class, 'verificarPago'])
             ->name('ordenes.pago-qr.verificar');
     });
+
+    /**
+     * =========================
+     *        EQUIPOS
+     * =========================
+     */
+    Route::get('/equipos', function () {
+        // Puedes retornar una vista, Inertia o lo que necesites aquí
+        // return view('equipos.index');
+        return response()->json(['message' => 'Ruta /equipos disponible']);
+    })->name('equipos.index');
 
     /**
      * =========================
