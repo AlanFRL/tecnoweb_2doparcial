@@ -60,13 +60,14 @@ const verificarPago = async () => {
     }
 };
 
-// Verificación automática cada 10 segundos
+
+// Verificación automática cada 5 segundos
 onMounted(() => {
     autoVerificacion.value = setInterval(() => {
         if (!verificando.value) {
             verificarPago();
         }
-    }, 10000); // 10 segundos
+    }, 5000); // 5 segundos
 });
 
 onUnmounted(() => {
@@ -167,6 +168,7 @@ const volver = () => {
                              }"
                              class="border-l-4 p-4 mb-6 rounded">
                             <p class="font-medium">{{ mensaje }}</p>
+                            <p v-if="mensajeTipo === 'success'" class="text-xs mt-1 text-green-700">Redirigiendo automáticamente...</p>
                         </div>
 
                         <!-- Instrucciones -->
@@ -180,7 +182,10 @@ const volver = () => {
                                 <li>Haz clic en "Verificar Pago" o espera la verificación automática</li>
                             </ol>
                             <p class="text-xs text-blue-600 mt-2">
-                                ℹ️ El sistema verifica automáticamente cada 10 segundos
+                                ℹ️ El sistema verifica automáticamente cada <strong>5 segundos</strong> y te avisará en cuanto el pago sea confirmado.
+                            </p>
+                            <p v-if="mensajeTipo !== 'success'" class="text-xs text-blue-700 mt-1">
+                                Por favor, no cierres ni recargues esta página hasta que se confirme el pago.
                             </p>
                         </div>
 
@@ -188,7 +193,7 @@ const volver = () => {
                         <div class="flex gap-3">
                             <PrimaryButton
                                 @click="verificarPago"
-                                :disabled="verificando"
+                                :disabled="verificando || mensajeTipo === 'success'"
                                 class="flex-1"
                             >
                                 <span v-if="verificando" class="flex items-center justify-center">
@@ -203,7 +208,7 @@ const volver = () => {
                                 </span>
                             </PrimaryButton>
 
-                            <SecondaryButton @click="volver" class="flex-1">
+                            <SecondaryButton @click="volver" class="flex-1" :disabled="mensajeTipo === 'success'">
                                 ⬅️ Volver a la orden
                             </SecondaryButton>
                         </div>
