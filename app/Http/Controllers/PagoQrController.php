@@ -56,23 +56,29 @@ class PagoQrController extends Controller
                 ];
             })->toArray();
 
-            // 5) Armar payload con monto de prueba (0.10 Bs)
-            $testAmount = (float) config('pagofacil.test_amount', 0.10);
+                // 5) Generar identificador único para el abono QR SOLO EN LÓGICA
+                $abonosQR = Pago::where('orden_nro', $orden->nro)
+                    ->where('metodo', 'QR')
+                    ->count();
+                $companyTransactionId = $orden->nro . '-abono' . ($abonosQR + 1);
 
-            $payload = [
-                'paymentMethod' => $paymentMethodId,
-                'clientName'    => $cliente->nombre,
-                'documentType'  => 1, // 1 = CI
-                'documentId'    => (string) $cliente->id, // Usamos ID del cliente como documento
-                'phoneNumber'   => $cliente->telefono ?? '00000000',
-                'email'         => 'alanfromerol@gmail.com', // Email fijo para todos
-                'paymentNumber' => $orden->nro, // ID único de la transacción
-                'amount'        => $testAmount, // Monto de prueba
-                'currency'      => 2, // 2 = BOB
-                'clientCode'    => (string) $cliente->id,
-                'callbackUrl'   => config('pagofacil.callback_url') ?? url('/payment/callback'),
-                'orderDetail'   => $orderDetail,
-            ];
+                // 6) Armar payload con monto de prueba (0.10 Bs)
+                $testAmount = (float) config('pagofacil.test_amount', 0.10);
+
+                $payload = [
+                    'paymentMethod' => $paymentMethodId,
+                    'clientName'    => $cliente->nombre,
+                    'documentType'  => 1, // 1 = CI
+                    'documentId'    => (string) $cliente->id, // Usamos ID del cliente como documento
+                    'phoneNumber'   => $cliente->telefono ?? '00000000',
+                    'email'         => 'alanfromerol@gmail.com', // Email fijo para todos
+                    'paymentNumber' => $companyTransactionId, // ID único de la transacción SOLO EN LÓGICA
+                    'amount'        => $testAmount, // Monto de prueba
+                    'currency'      => 2, // 2 = BOB
+                    'clientCode'    => (string) $cliente->id,
+                    'callbackUrl'   => config('pagofacil.callback_url') ?? url('/payment/callback'),
+                    'orderDetail'   => $orderDetail,
+                ];
 
             // 6) Generar QR
             $values = $this->pagoFacil->generateQrForOrder($token, $paymentMethodId, $payload);
@@ -109,8 +115,14 @@ class PagoQrController extends Controller
         try {
             $token = $this->pagoFacil->login();
 
+            // Calcular el identificador único del abono QR pendiente
+            $abonosQR = Pago::where('orden_nro', $orden->nro)
+                ->where('metodo', 'QR')
+                ->count();
+            $companyTransactionId = $orden->nro . '-abono' . ($abonosQR + 1);
+
             $values = $this->pagoFacil->queryTransaction($token, [
-                'companyTransactionId' => $orden->nro,
+                'companyTransactionId' => $companyTransactionId,
             ]);
 
             $status = $values['paymentStatus'] ?? 0;

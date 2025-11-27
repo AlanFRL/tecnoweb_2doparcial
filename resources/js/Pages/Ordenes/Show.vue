@@ -249,12 +249,6 @@ const irAPagoQr = () => {
                             >
                                 💵 Registrar Pago
                             </PrimaryButton>
-                            <PrimaryButton 
-                                @click="irAPagoQr"
-                                class="bg-green-600 hover:bg-green-700"
-                            >
-                                📱 Pagar con QR
-                            </PrimaryButton>
                         </div>
                     </div>
 
